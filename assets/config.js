@@ -4,4 +4,7 @@
 window.SAENGGINDA_CONFIG = {
   submitUrl: "",
   dataUrl: "public/responses.json",
+  adminDataUrl: "public/admin.json",
+  repo: "JuncholKimSo/saengginda",   // 관리 페이지의 숨김/해제 커밋 대상
+  branch: "main",
 };

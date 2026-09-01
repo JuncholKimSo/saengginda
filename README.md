@@ -63,7 +63,10 @@ npx wrangler deploy
 
 ## 운영
 
-- **부적절한 제출 감추기**: 해당 `data/**/*.json`에서 `"hidden": false` → `true`로 수정해 커밋.
+- **관리 페이지**: `/admin.html` (공개 페이지에는 링크 없음). 전체 응답을 표로 열람·검색·필터하고
+  CSV를 내려받을 수 있다. 저장소 쓰기 권한 토큰을 페이지에 저장해 두면(브라우저 localStorage에만 보관)
+  클릭 한 번으로 숨김/해제 — GitHub 커밋을 만들고 Actions가 1~2분 안에 재집계한다.
+- **부적절한 제출 감추기 (수동)**: 해당 `data/**/*.json`에서 `"hidden": false` → `true`로 수정해 커밋.
   다음 집계부터 사이트·CSV에서 빠진다 (원본 파일은 저장소에 남음).
 - **행사 당일**: `cloud.html`을 스크린에 띄워 두면 90초마다 새 제출이 반영된다.
 - **수집 종료**: Worker를 지우거나(`npx wrangler delete`) 토큰을 revoke하면 제출이 막힌다.

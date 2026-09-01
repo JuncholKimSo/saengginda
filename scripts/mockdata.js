@@ -37,7 +37,7 @@ for (let i = 0; i < N; i++) {
     verb: thing === "자치구의 시 전환" ? "바뀐다" : "생긴다",
     answer: ANSWERS[Math.floor(Math.random() * ANSWERS.length)],
     region: REGIONS[Math.floor(Math.random() * REGIONS.length)],
-    hidden: false,
+    hidden: Math.random() < 0.08,
   };
   const dir = path.join(ROOT, "data", "202609");
   fs.mkdirSync(dir, { recursive: true });

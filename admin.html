@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>수집 관리 — 생긴다는데</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.wrap { max-width: 1080px; }
+.admin-head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.admin-head h1 { font-size: 24px; margin: 0; }
+.admin-head .links { margin-left: auto; font-size: 14px; display: flex; gap: 14px; }
+.admin-head .links a { color: var(--accent); }
+
+.stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.stats span {
+  background: #fff; border: 1.5px solid var(--line); border-radius: 999px;
+  padding: 6px 14px; font-size: 14px; color: var(--ink-soft);
+}
+.stats b { color: var(--ink); }
+
+.controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.controls input[type="search"] {
+  flex: 1; min-width: 200px; border: 1.5px solid var(--line); border-radius: 8px;
+  padding: 9px 12px; font: inherit; font-size: 14px; background: #fff; outline: none;
+}
+.controls input[type="search"]:focus { border-color: var(--accent); }
+.controls select {
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 9px 10px;
+  font: inherit; font-size: 14px; background: #fff;
+}
+.controls a.csv {
+  font-size: 14px; color: var(--accent); text-decoration: none;
+  border: 1.5px solid var(--accent); border-radius: 999px; padding: 8px 16px; font-weight: 600;
+}
+
+.token-box {
+  background: #fff; border: 1.5px solid var(--line); border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 24px; font-size: 14px;
+}
+.token-box.ok { border-color: var(--accent); }
+.token-box .row { display: flex; gap: 8px; margin-top: 8px; }
+.token-box input {
+  flex: 1; border: 1.5px solid var(--line); border-radius: 8px; padding: 8px 10px;
+  font: inherit; font-size: 13px; outline: none;
+}
+.token-box button {
+  border: none; background: var(--accent); color: #fff; border-radius: 8px;
+  padding: 8px 16px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.token-box button.clear { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--line); }
+.token-box .note { color: var(--ink-soft); font-size: 13px; margin-top: 8px; }
+
+.table-scroll { overflow-x: auto; background: #fff; border: 1.5px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 760px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 13px; color: var(--ink-soft); font-weight: 600; white-space: nowrap; background: #faf7f1; }
+td.when { white-space: nowrap; color: var(--ink-soft); font-size: 13px; }
+td.thing b { font-weight: 700; }
+td.thing .orig { color: var(--ink-soft); font-size: 12px; }
+td.answer { max-width: 420px; }
+td.answer p { margin: 0; line-height: 1.6; word-break: keep-all; white-space: pre-wrap;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+td.answer p.expanded { -webkit-line-clamp: unset; }
+tr.hidden-row td { opacity: .45; }
+tr.hidden-row td.actions { opacity: 1; }
+td.actions { white-space: nowrap; }
+td.actions button {
+  border: 1.5px solid var(--line); background: #fff; border-radius: 999px;
+  padding: 5px 14px; font: inherit; font-size: 13px; cursor: pointer;
+}
+td.actions button:hover:not(:disabled) { border-color: var(--critic); color: var(--critic); }
+tr.hidden-row td.actions button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+td.actions button:disabled { cursor: default; color: #b5afa4; }
+td.actions .ghlink { font-size: 12px; margin-left: 8px; color: var(--ink-soft); }
+.msg { min-height: 1.5em; font-size: 14px; margin: 12px 2px; }
+.msg.err { color: var(--critic); }
+.msg.ok { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="admin-head">
+    <h1>수집 관리</h1>
+    <span style="color:var(--ink-soft);font-size:14px">삶을 위한 도시 @광주</span>
+    <div class="links">
+      <a href="index.html">수집 폼</a>
+      <a href="cloud.html">클라우드</a>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="token-box" id="token-box">
+    <b>숨김/해제 기능</b> — 저장소 쓰기 권한이 있는 GitHub 토큰이 필요합니다.
+    토큰은 이 브라우저(localStorage)에만 저장되고 GitHub API 외에는 어디에도 전송되지 않습니다.
+    <div class="row">
+      <input type="password" id="token-input" placeholder="github_pat_… (Contents 읽기/쓰기 권한)" autocomplete="off">
+      <button id="token-save">저장</button>
+      <button class="clear" id="token-clear">지우기</button>
+    </div>
+    <div class="note" id="token-note">토큰 없음 — 표 열람과 CSV 다운로드는 토큰 없이도 됩니다.</div>
+  </div>
+
+  <div class="controls">
+    <input type="search" id="search" placeholder="빈칸·답변 검색">
+    <select id="filter">
+      <option value="all">전체 보기</option>
+      <option value="visible">공개만</option>
+      <option value="hidden">숨김만</option>
+    </select>
+    <a class="csv" id="csv-link" href="public/responses.csv" download>CSV 내려받기</a>
+  </div>
+
+  <div class="msg" id="msg"></div>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr><th>시간</th><th>빈칸</th><th></th><th>지역</th><th>나름의 답</th><th>관리</th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="assets/config.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

@@ -9,7 +9,7 @@
   // "일자리가" → "일자리". 남는 글자가 2자 미만이면 조사를 떼지 않는다 ("종이" 보호).
   function normalize(thing) {
     var t = thing.trim().replace(/\s+/g, " ");
-    if (t.length >= 3 && /[이가은는도을를]$/.test(t)) t = t.slice(0, -1);
+    if (t.length >= 3 && /[이가은는]$/.test(t)) t = t.slice(0, -1);
     return t;
   }
 

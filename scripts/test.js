@@ -33,6 +33,13 @@ try {
   assert.strictEqual(byId.t2.verb, "바뀐다", "verb 보존");
   assert.strictEqual(byId.t1.verb, "생긴다", "verb 기본값");
 
+  const admin = JSON.parse(fs.readFileSync(path.join(ROOT, "public", "admin.json"), "utf8"));
+  const adminById = Object.fromEntries(admin.entries.map((e) => [e.id, e]));
+  assert.ok(adminById.t3, "admin.json에는 hidden 건 포함");
+  assert.strictEqual(adminById.t3.hidden, true, "hidden 플래그 유지");
+  assert.strictEqual(adminById.t3.path, "data/999999/t3.json", "원본 경로 포함");
+  assert.ok(!("path" in byId.t1), "공개 JSON에는 path 미포함");
+
   const csv = fs.readFileSync(path.join(ROOT, "public", "responses.csv"), "utf8");
   assert.ok(csv.charCodeAt(0) === 0xfeff, "CSV에 UTF-8 BOM 포함");
   assert.ok(csv.includes('"쉼표, ""따옴표""와\n줄바꿈 포함"'), "CSV 이스케이프");
