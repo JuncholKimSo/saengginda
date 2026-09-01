@@ -21,17 +21,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: 집계
-        run: node scripts/aggregate.js
-      - name: 결과 커밋
+      - name: 집계·커밋 (경합 시 재시도)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/
-          if git diff --cached --quiet; then
-            echo "변경 없음"
-          else
+          for i in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            node scripts/aggregate.js
+            git add public/
+            if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
             git commit -m "chore: 응답 집계 갱신"
-            git pull --rebase origin main
-            git push
-          fi
+            if git push origin main; then exit 0; fi
+            echo "푸시 경합 — 재시도 $i"
+            sleep 5
+          done
+          exit 1
