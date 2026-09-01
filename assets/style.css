@@ -1,17 +1,31 @@
+/* 생긴다는데 — 포스터/진(zine) 언어: 잉크 + 오프화이트 + 코발트 단일 액센트, 직각, 하드 섀도 */
+
+@font-face {
+  font-family: "GmarketSans";
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");
+}
+@font-face {
+  font-family: "GmarketSans";
+  font-weight: 500;
+  font-display: swap;
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format("woff");
+}
+
 :root {
-  --paper: #faf7f1;
-  --ink: #211f1b;
-  --ink-soft: #6b665d;
-  --line: #d9d3c7;
-  --accent: #2f6b5f;
-  --accent-soft: #e4ede9;
-  --expect: #2f8f6b;
-  --doubt: #c9891f;
-  --critic: #c25b4e;
-  --unsure: #8a857d;
+  --paper: #f2f1ec;
+  --ink: #17171a;
+  --ink-soft: #5d5d64;
+  --line: #d6d5cf;
+  --accent: #2b3bf2;
+  --accent-soft: #e4e7ff;
+  --display: "GmarketSans", "Pretendard Variable", Pretendard, sans-serif;
 }
 
 * { box-sizing: border-box; }
+
+::selection { background: var(--accent); color: #fff; }
 
 body {
   margin: 0;
@@ -24,47 +38,70 @@ body {
 }
 
 .wrap {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 32px 20px 80px;
+  padding: 28px 20px 80px;
 }
 
+/* 헤더 */
 .site-head {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 56px;
-  font-size: 14px;
-  color: var(--ink-soft);
+  margin-bottom: 64px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
 }
-.site-head a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
-.site-head a:hover { color: var(--accent); border-color: var(--accent); }
-
-.big-sentence {
-  font-size: clamp(26px, 6vw, 38px);
+.site-head span {
+  font-family: var(--display);
   font-weight: 700;
-  line-height: 1.45;
-  letter-spacing: -0.02em;
-  margin: 0 0 8px;
+  font-size: 15px;
+}
+.site-head a {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid var(--ink);
+  padding: 6px 14px;
+  background: #fff;
+  transition: transform .12s, box-shadow .12s;
+}
+.site-head a:hover {
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+
+/* 헤드라인 */
+.big-sentence {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(28px, 6.4vw, 44px);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
   word-break: keep-all;
+  cursor: text;
 }
 
 .blank {
   display: inline-block;
-  min-width: 7em;
+  min-width: 6.5em;
   max-width: 100%;
   border: none;
-  border-bottom: 3px solid var(--accent);
+  border-bottom: 5px solid var(--accent);
   background: transparent;
   font: inherit;
   color: var(--accent);
-  padding: 0 4px 2px;
+  padding: 0 6px 2px;
   outline: none;
   vertical-align: baseline;
 }
-.blank::placeholder { color: #b9c9c4; font-weight: 500; }
+.blank::placeholder { color: #b9bdde; }
+.blank:focus { background: var(--accent-soft); }
 
+/* 생긴다는데 / 바뀐다는데 토글 */
 .verb-toggle { white-space: nowrap; }
 .verb-toggle .verb {
   appearance: none;
@@ -73,140 +110,123 @@ body {
   padding: 0;
   font: inherit;
   cursor: pointer;
-  color: #b3ada2;
-  transition: color .15s;
+  color: #b7b6af;
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+  transition: color .12s;
 }
 .verb-toggle .verb.active {
-  color: var(--accent);
-  border-bottom: 3px solid var(--accent);
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 5px solid var(--accent);
 }
 .verb-toggle .verb:not(.active):hover { color: var(--ink-soft); }
-.verb-sep { color: #d0cabd; margin: 0 6px; font-weight: 400; }
+.verb-sep { color: #c9c8c1; margin: 0 8px; font-weight: 500; }
 
 .hint {
   font-size: 14px;
   color: var(--ink-soft);
-  margin: 0 0 48px;
+  margin: 14px 0 56px;
   line-height: 1.8;
 }
-.hint b { color: var(--accent); font-weight: 600; }
-.big-sentence { cursor: text; }
+.hint b { color: var(--accent); font-weight: 700; }
 
+/* 폼 섹션 */
 fieldset {
   border: none;
-  margin: 0 0 40px;
+  margin: 0 0 44px;
   padding: 0;
 }
 legend {
-  font-size: 16px;
+  font-family: var(--display);
   font-weight: 700;
+  font-size: 17px;
   padding: 0;
   margin-bottom: 14px;
 }
-legend .sub { font-weight: 400; color: var(--ink-soft); font-size: 14px; }
+legend .sub { font-family: inherit; font-weight: 500; color: var(--ink-soft); font-size: 13px; }
 
-.pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.pills label {
-  cursor: pointer;
-}
+.pills { display: flex; flex-wrap: wrap; gap: 10px; }
+.pills label { cursor: pointer; }
 .pills input { position: absolute; opacity: 0; pointer-events: none; }
 .pills span {
   display: inline-block;
-  padding: 8px 16px;
-  border: 1.5px solid var(--line);
-  border-radius: 999px;
+  padding: 9px 16px;
+  border: 2px solid var(--ink);
   font-size: 15px;
+  font-weight: 600;
   color: var(--ink);
   background: #fff;
-  transition: border-color .15s, background .15s;
+  transition: background .12s, color .12s, box-shadow .12s, transform .12s;
 }
+.pills label:hover span:not(:checked) { box-shadow: 3px 3px 0 var(--ink); transform: translate(-1px, -1px); }
 .pills input:checked + span {
   border-color: var(--accent);
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: none;
+  transform: none;
 }
-.pills input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pills input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 textarea {
   width: 100%;
   min-height: 220px;
-  border: 1.5px solid var(--line);
-  border-radius: 10px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
   background: #fff;
-  padding: 14px 16px;
+  padding: 16px;
   font: inherit;
   font-size: 16px;
   color: var(--ink);
   resize: vertical;
   outline: none;
+  transition: box-shadow .12s;
 }
-textarea:focus { border-color: var(--accent); }
-textarea::placeholder { color: #b5afa4; }
+textarea:focus { border-color: var(--accent); box-shadow: 4px 4px 0 var(--accent); }
+textarea::placeholder { color: #b0afa8; }
 
-.count { font-size: 13px; color: var(--ink-soft); text-align: right; margin-top: 6px; }
+.count { font-size: 13px; color: var(--ink-soft); text-align: right; margin-top: 8px; }
 
+/* 제출 버튼 */
 .submit-row { margin-top: 8px; }
 button.primary {
   appearance: none;
-  border: none;
+  border: 2px solid var(--ink);
   background: var(--accent);
   color: #fff;
-  font: inherit;
-  font-size: 17px;
+  font-family: var(--display);
   font-weight: 700;
-  padding: 14px 36px;
-  border-radius: 999px;
+  font-size: 17px;
+  padding: 15px 40px;
   cursor: pointer;
+  box-shadow: 5px 5px 0 var(--ink);
+  transition: transform .12s, box-shadow .12s;
 }
-button.primary:hover { background: #275a50; }
-button.primary:disabled { background: #a8b5b1; cursor: default; }
+button.primary:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--ink); }
+button.primary:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--ink); }
+button.primary:disabled {
+  background: #a9adc9;
+  transform: none;
+  box-shadow: 5px 5px 0 var(--ink);
+  cursor: default;
+}
 
 .form-error {
-  color: var(--critic);
+  color: #d0342c;
   font-size: 14px;
-  margin-top: 12px;
+  font-weight: 600;
+  margin-top: 14px;
   min-height: 1.5em;
 }
 
 .privacy {
-  margin-top: 56px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
+  margin-top: 64px;
+  padding-top: 18px;
+  border-top: 2px solid var(--ink);
   font-size: 13px;
   color: var(--ink-soft);
 }
-
-/* 제출 완료 화면 */
-.done { display: none; }
-.done h2 {
-  font-size: clamp(24px, 5vw, 32px);
-  line-height: 1.5;
-  word-break: keep-all;
-  margin: 0 0 16px;
-}
-.done p { color: var(--ink-soft); margin: 0 0 32px; }
-.done .actions { display: flex; gap: 12px; flex-wrap: wrap; }
-.done a.primary {
-  display: inline-block;
-  text-decoration: none;
-  background: var(--accent);
-  color: #fff;
-  font-weight: 700;
-  padding: 12px 28px;
-  border-radius: 999px;
-}
-.done button.ghost {
-  appearance: none;
-  background: transparent;
-  border: 1.5px solid var(--line);
-  border-radius: 999px;
-  font: inherit;
-  padding: 12px 28px;
-  cursor: pointer;
-  color: var(--ink);
-}
-.done button.ghost:hover { border-color: var(--accent); color: var(--accent); }
 
 /* 관리 페이지로 가는 비밀 표시 */
 a.secret-dot {
@@ -219,3 +239,57 @@ a.secret-dot {
   vertical-align: 1px;
 }
 a.secret-dot:hover { background: var(--accent); }
+
+/* 제출 완료 화면 */
+.done { display: none; }
+.done h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(26px, 5.4vw, 36px);
+  line-height: 1.5;
+  word-break: keep-all;
+  margin: 0 0 16px;
+}
+.done p { color: var(--ink-soft); margin: 0 0 36px; }
+.done .actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.done a.primary {
+  display: inline-block;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--display);
+  font-weight: 700;
+  padding: 13px 30px;
+  box-shadow: 5px 5px 0 var(--ink);
+  transition: transform .12s, box-shadow .12s;
+}
+.done a.primary:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--ink); }
+.done button.ghost {
+  appearance: none;
+  background: #fff;
+  border: 2px solid var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 16px;
+  padding: 13px 30px;
+  cursor: pointer;
+  color: var(--ink);
+  transition: transform .12s, box-shadow .12s;
+}
+.done button.ghost:hover { box-shadow: 4px 4px 0 var(--ink); transform: translate(-1px, -1px); }
+
+/* 로드 모션: 위에서 순서대로 자리 잡기 */
+@media (prefers-reduced-motion: no-preference) {
+  .big-sentence, .hint, form fieldset, .submit-row {
+    animation: rise .5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .hint { animation-delay: .08s; }
+  form fieldset:nth-of-type(1) { animation-delay: .16s; }
+  form fieldset:nth-of-type(2) { animation-delay: .24s; }
+  .submit-row { animation-delay: .32s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}

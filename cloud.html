@@ -3,16 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>모인 말들 — 생긴다는데</title>
+<title>모인 말들 · 생긴다는데</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
+@font-face {
+  font-family: "GmarketSans";
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");
+}
 :root {
-  --bg: #16150f;
-  --fg: #f2eee4;
-  --fg-soft: #97917f;
-  --line: #35332a;
+  --bg: #101014;
+  --fg: #eeede6;
+  --fg-soft: #8b8a92;
+  --line: #2c2c33;
+  --accent: #5f6fff;
+  --display: "GmarketSans", "Pretendard Variable", Pretendard, sans-serif;
 }
 * { box-sizing: border-box; }
+::selection { background: var(--accent); color: #fff; }
 body {
   margin: 0;
   background: var(--bg);
@@ -25,26 +34,38 @@ header {
   position: fixed;
   top: 0; left: 0; right: 0;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 20px;
-  padding: 18px 28px;
+  padding: 16px 28px;
   font-size: 15px;
   color: var(--fg-soft);
+  border-bottom: 2px solid var(--line);
+  background: var(--bg);
   z-index: 2;
 }
-header h1 { font-size: 18px; font-weight: 700; color: var(--fg); margin: 0; }
-header .count b { color: var(--fg); font-weight: 700; }
-header a { color: var(--fg-soft); text-decoration: none; border-bottom: 1px solid var(--line); margin-left: auto; }
-header a:hover { color: var(--fg); }
-a.secret-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--line); border: none; margin-left: 0; flex: none;
-  align-self: center;
+header h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--fg);
+  margin: 0;
 }
-a.secret-dot:hover { background: var(--fg-soft); }
+header .count b { color: var(--accent); font-weight: 700; }
+header a {
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  border: 2px solid var(--fg);
+  padding: 5px 12px;
+  margin-left: auto;
+  transition: background .12s, color .12s;
+}
+header a:hover { background: var(--fg); color: var(--bg); }
+
 #cloud { position: fixed; inset: 0; }
 #cloud text { cursor: pointer; transition: opacity .2s; }
-#cloud text:hover { opacity: .75; }
+#cloud text:hover { opacity: .7; }
 
 #empty {
   position: fixed; inset: 0; display: none;
@@ -56,31 +77,38 @@ a.secret-dot:hover { background: var(--fg-soft); }
 #panel {
   position: fixed;
   top: 0; right: 0; bottom: 0;
-  width: min(440px, 100vw);
-  background: #1e1c15;
-  border-left: 1px solid var(--line);
+  width: min(460px, 100vw);
+  background: #17171c;
+  border-left: 2px solid var(--fg);
   transform: translateX(100%);
-  transition: transform .25s ease;
+  transition: transform .22s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 3;
   display: flex;
   flex-direction: column;
 }
+@media (prefers-reduced-motion: reduce) { #panel { transition: none; } }
 #panel.open { transform: translateX(0); }
 #panel .panel-head {
-  padding: 22px 24px 14px;
-  border-bottom: 1px solid var(--line);
+  padding: 22px 24px 16px;
+  border-bottom: 2px solid var(--line);
   display: flex; align-items: baseline; gap: 12px;
 }
-#panel h2 { margin: 0; font-size: 24px; word-break: keep-all; }
+#panel h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  margin: 0; font-size: 24px; word-break: keep-all;
+  border-bottom: 4px solid var(--accent);
+  padding-bottom: 2px;
+}
 #panel .panel-head .n { color: var(--fg-soft); font-size: 14px; }
 #panel .close {
   margin-left: auto; appearance: none; background: none; border: none;
-  color: var(--fg-soft); font-size: 22px; cursor: pointer; padding: 4px;
+  color: var(--fg-soft); font-size: 24px; cursor: pointer; padding: 4px;
 }
 #panel .close:hover { color: var(--fg); }
 #panel ul { list-style: none; margin: 0; padding: 8px 24px 40px; overflow-y: auto; flex: 1; }
-#panel li { padding: 16px 0; border-bottom: 1px solid var(--line); }
-#panel li .meta { font-size: 13px; margin-bottom: 6px; color: var(--fg-soft); }
+#panel li { padding: 18px 0; border-bottom: 1px solid var(--line); }
+#panel li .meta { font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--accent); }
 #panel li p { margin: 0; font-size: 15px; line-height: 1.7; color: var(--fg); white-space: pre-wrap; word-break: keep-all; }
 </style>
 </head>
@@ -89,7 +117,8 @@ a.secret-dot:hover { background: var(--fg-soft); }
   <h1>___이(가) 생긴다는데, 바뀐다는데.</h1>
   <span class="count">지금까지 <b id="total">0</b>개의 말</span>
   <a href="index.html">나도 말 보태기 →</a>
-  <a class="secret-dot" href="admin.html" aria-hidden="true" tabindex="-1"></a>
+  <a class="secret-dot" href="admin.html" aria-hidden="true" tabindex="-1"
+     style="width:7px;height:7px;border-radius:50%;background:var(--line);border:none;padding:0;margin-left:0;flex:none;align-self:center"></a>
 </header>
 
 <svg id="cloud"></svg>
@@ -105,7 +134,7 @@ a.secret-dot:hover { background: var(--fg-soft); }
 </aside>
 
 <script src="assets/vendor/d3.layout.cloud.js"></script>
-<script src="assets/config.js?v=3"></script>
-<script src="assets/cloud.js?v=3"></script>
+<script src="assets/config.js?v=4"></script>
+<script src="assets/cloud.js?v=4"></script>
 </body>
 </html>

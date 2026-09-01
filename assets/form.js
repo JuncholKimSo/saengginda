@@ -61,7 +61,7 @@
     var thing = document.getElementById("thing").value.trim();
     var answerText = answer.value.trim();
 
-    if (!thing) { errorEl.textContent = "빈칸을 채워 주세요 — 무엇이 생긴다던가요?"; return; }
+    if (!thing) { errorEl.textContent = "빈칸을 채워 주세요. 무엇이 생긴다던가요?"; return; }
     if (!answerText) { errorEl.textContent = "나름의 답을 한 줄이라도 적어 주세요."; return; }
 
     var url = window.SAENGGINDA_CONFIG.submitUrl || "/submit";

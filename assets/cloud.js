@@ -1,6 +1,11 @@
 (function () {
-  // 의미 없는 장식 팔레트 — 단어마다 순환
-  var PALETTE = ["#5fc596", "#e0a83d", "#e07a6b", "#7fb2e0", "#c9a0dc", "#d8d3c3"];
+  // 포스터 톤: 상위 단어만 액센트, 나머지는 본색 농도 차이
+  function wordColor(i) {
+    if (i === 0) return "#5f6fff";
+    if (i === 1) return "#eeede6";
+    if (i < 5) return "#c9c8c0";
+    return "#8b8a92";
+  }
   var REFRESH_MS = 90 * 1000;
   var svg = document.getElementById("cloud");
   var lastSignature = null;
@@ -37,7 +42,7 @@
       return {
         text: g.word,
         size: minFont + (maxFont - minFont) * Math.sqrt(g.count / maxCount),
-        color: PALETTE[i % PALETTE.length],
+        color: wordColor(i),
         count: g.count,
       };
     });
@@ -47,7 +52,7 @@
       .words(words)
       .padding(6)
       .rotate(0)
-      .font("Pretendard Variable")
+      .font("GmarketSans")
       .fontWeight(700)
       .fontSize(function (d) { return d.size; })
       .on("end", function (placed) {
@@ -64,6 +69,7 @@
           t.setAttribute("fill", d.color);
           t.setAttribute("font-size", d.size + "px");
           t.setAttribute("font-weight", "700");
+          t.setAttribute("font-family", "GmarketSans, Pretendard, sans-serif");
           t.addEventListener("click", function () { openPanel(d.text); });
           g.appendChild(t);
         });
@@ -130,6 +136,11 @@
     resizeTimer = setTimeout(function () { lastSignature = null; load(); }, 400);
   });
 
-  load();
+  // 디스플레이 폰트가 로드된 뒤 배치해야 글자 크기 측정이 정확하다
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(load);
+  } else {
+    load();
+  }
   setInterval(load, REFRESH_MS);
 })();

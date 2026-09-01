@@ -16,8 +16,8 @@
     var has = !!getToken();
     tokenBox.classList.toggle("ok", has);
     tokenNote.textContent = has
-      ? "토큰 저장됨 — 숨김/해제 버튼이 활성화되었습니다."
-      : "토큰 없음 — 표 열람과 CSV 다운로드는 토큰 없이도 됩니다.";
+      ? "토큰 저장됨. 숨김/해제 버튼이 활성화되었습니다."
+      : "토큰 없음. 표 열람과 CSV 다운로드는 토큰 없이도 됩니다.";
     document.querySelectorAll("td.actions button").forEach(function (b) { b.disabled = !has; });
   }
   document.getElementById("token-save").addEventListener("click", function () {
@@ -71,7 +71,7 @@
           method: "PUT",
           headers: headers,
           body: JSON.stringify({
-            message: "chore: " + (obj.hidden ? "숨김" : "숨김 해제") + " — " + entry.id.slice(0, 8),
+            message: "chore: " + (obj.hidden ? "숨김" : "숨김 해제") + " " + entry.id.slice(0, 8),
             content: b64EncodeUtf8(JSON.stringify(obj, null, 1)),
             sha: file.sha,
             branch: CFG.branch,
@@ -81,7 +81,7 @@
       .then(function (res) {
         if (!res.ok) throw new Error("커밋에 실패했습니다 (" + res.status + ")");
         entry.hidden = !entry.hidden;
-        say((entry.hidden ? "숨김" : "숨김 해제") + " 완료 — 1~2분 뒤 Actions 집계에 반영됩니다.", "ok");
+        say((entry.hidden ? "숨김" : "숨김 해제") + " 완료. 1~2분 뒤 Actions 집계에 반영됩니다.", "ok");
         renderRows();
       })
       .catch(function (err) { say(err.message, "err"); })
