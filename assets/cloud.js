@@ -1,5 +1,6 @@
 (function () {
-  var STANCE_COLORS = { "기대": "#5fc596", "의문": "#e0a83d", "비판": "#e07a6b", "모름": "#8f8a7c" };
+  // 의미 없는 장식 팔레트 — 단어마다 순환
+  var PALETTE = ["#5fc596", "#e0a83d", "#e07a6b", "#7fb2e0", "#c9a0dc", "#d8d3c3"];
   var REFRESH_MS = 90 * 1000;
   var svg = document.getElementById("cloud");
   var lastSignature = null;
@@ -12,22 +13,13 @@
     return t;
   }
 
-  function dominantStance(stances) {
-    var best = "모름", bestN = -1;
-    ["기대", "의문", "비판", "모름"].forEach(function (s) {
-      if ((stances[s] || 0) > bestN) { bestN = stances[s] || 0; best = s; }
-    });
-    return best;
-  }
-
   function buildGroups(entries) {
     var map = {};
     entries.forEach(function (e) {
       var w = normalize(e.thing);
       if (!w) return;
-      if (!map[w]) map[w] = { word: w, count: 0, stances: {}, entries: [] };
+      if (!map[w]) map[w] = { word: w, count: 0, entries: [] };
       map[w].count += 1;
-      map[w].stances[e.stance] = (map[w].stances[e.stance] || 0) + 1;
       map[w].entries.push(e);
     });
     return Object.values(map).sort(function (a, b) { return b.count - a.count; });
@@ -41,11 +33,11 @@
     var maxFont = Math.min(110, Math.max(48, W / 12));
     var minFont = 17;
 
-    var words = groups.map(function (g) {
+    var words = groups.map(function (g, i) {
       return {
         text: g.word,
         size: minFont + (maxFont - minFont) * Math.sqrt(g.count / maxCount),
-        color: STANCE_COLORS[dominantStance(g.stances)],
+        color: PALETTE[i % PALETTE.length],
         count: g.count,
       };
     });
@@ -91,22 +83,14 @@
     list.innerHTML = "";
     group.entries.slice().reverse().forEach(function (e) {
       var li = document.createElement("li");
-      var meta = document.createElement("div");
-      meta.className = "meta";
-      var stance = document.createElement("span");
-      stance.className = "s-" + e.stance;
-      stance.textContent = e.stance === "기대" ? "기대된다" : e.stance === "의문" ? "글쎄, 의문이다"
-        : e.stance === "비판" ? "비판하고 싶다" : "잘 모르겠다";
-      meta.appendChild(stance);
       if (e.region && e.region !== "무응답") {
-        var region = document.createElement("span");
-        region.className = "region";
-        region.textContent = e.region;
-        meta.appendChild(region);
+        var meta = document.createElement("div");
+        meta.className = "meta";
+        meta.textContent = e.region;
+        li.appendChild(meta);
       }
       var p = document.createElement("p");
       p.textContent = e.answer;
-      li.appendChild(meta);
       li.appendChild(p);
       list.appendChild(li);
     });

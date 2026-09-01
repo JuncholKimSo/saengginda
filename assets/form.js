@@ -10,10 +10,6 @@
     answerCount.textContent = String(answer.value.length);
   });
 
-  function getStance() {
-    var el = form.querySelector('input[name="stance"]:checked');
-    return el ? el.value : "";
-  }
   function getRegion() {
     var el = form.querySelector('input[name="region"]:checked');
     return el ? el.value : "무응답";
@@ -24,11 +20,9 @@
     errorEl.textContent = "";
 
     var thing = document.getElementById("thing").value.trim();
-    var stance = getStance();
     var answerText = answer.value.trim();
 
     if (!thing) { errorEl.textContent = "빈칸을 채워 주세요 — 무엇이 생긴다던가요?"; return; }
-    if (!stance) { errorEl.textContent = "이 말을 들었을 때의 마음을 하나 골라 주세요."; return; }
     if (!answerText) { errorEl.textContent = "나름의 답을 한 줄이라도 적어 주세요."; return; }
 
     var url = window.SAENGGINDA_CONFIG.submitUrl || "/submit";
@@ -38,7 +32,7 @@
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ thing: thing, stance: stance, answer: answerText, region: getRegion() }),
+      body: JSON.stringify({ thing: thing, answer: answerText, region: getRegion() }),
     })
       .then(function (res) {
         if (!res.ok) return res.json().catch(function () { return {}; }).then(function (body) {

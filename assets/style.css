@@ -109,7 +109,7 @@ legend .sub { font-weight: 400; color: var(--ink-soft); font-size: 14px; }
 
 textarea {
   width: 100%;
-  min-height: 160px;
+  min-height: 220px;
   border: 1.5px solid var(--line);
   border-radius: 10px;
   background: #fff;

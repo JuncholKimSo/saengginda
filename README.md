@@ -7,7 +7,7 @@
 
 | 구성 | 위치 | 역할 |
 |---|---|---|
-| 수집 폼 | `index.html` | 빈칸 채우기 + 마음(기대/의문/비판/모름) + 나름의 답 + 지역(선택) |
+| 수집 폼 | `index.html` | 빈칸 채우기 + 나름의 답 + 지역(선택) |
 | 워드클라우드 | `cloud.html` | 모인 말들 시각화. 단어 클릭 → 답변 목록. 90초마다 자동 갱신 |
 | 제출 통로 | `worker/` | Cloudflare Worker. 폼 POST → GitHub API로 `data/`에 커밋. IP 미저장 |
 | DB | `data/YYYYMM/*.json` | 제출 1건 = 파일 1개. `hidden: true`로 바꾸면 집계에서 제외 |

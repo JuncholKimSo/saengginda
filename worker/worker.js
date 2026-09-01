@@ -9,7 +9,6 @@
 //
 // 익명성: IP·UA 등 요청 메타데이터는 저장하지 않는다. 속도 제한은 메모리에서만 처리.
 
-const STANCES = new Set(["기대", "의문", "비판", "모름"]);
 const REGIONS = new Set(["광주", "전남", "기타", "무응답"]);
 
 // isolate 메모리 안에서만 사는 속도 제한 (분당 5건/IP). 어디에도 기록되지 않는다.
@@ -66,17 +65,15 @@ export default {
     try { body = await request.json(); } catch { return json(env, 400, { error: "잘못된 요청입니다." }); }
 
     const thing = String(body.thing || "").trim().replace(/\s+/g, " ");
-    const stance = String(body.stance || "");
     const answer = String(body.answer || "").trim();
     const region = REGIONS.has(String(body.region)) ? String(body.region) : "무응답";
 
     if (!thing || thing.length > 40) return json(env, 400, { error: "빈칸은 1~40자로 채워 주세요." });
-    if (!STANCES.has(stance)) return json(env, 400, { error: "마음을 하나 골라 주세요." });
     if (!answer || answer.length > 2000) return json(env, 400, { error: "답은 1~2000자로 적어 주세요." });
 
     const id = crypto.randomUUID();
     const created_at = kstNow();
-    const entry = { id, created_at, thing, stance, answer, region, hidden: false };
+    const entry = { id, created_at, thing, answer, region, hidden: false };
 
     const yyyymm = created_at.slice(0, 7).replace("-", "");
     const path = `data/${yyyymm}/${created_at.slice(0, 10)}_${id}.json`;

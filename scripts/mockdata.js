@@ -9,11 +9,10 @@ const ROOT = path.join(__dirname, "..");
 const N = Number(process.argv[2] || 40);
 
 const THINGS = [
-  ["군공항 이전이", 8], ["메가시티가", 6], ["일자리가", 6], ["KTX 노선이", 4],
-  ["복합쇼핑몰이", 4], ["대학병원 분원이", 3], ["산업단지가", 3], ["광역철도가", 2],
-  ["관광벨트가", 2], ["행정 통합청사가", 2],
+  ["군공항 이전", 8], ["복합쇼핑몰", 6], ["반도체 팹", 6], ["자치구의 시 전환", 4],
+  ["반도체 계약 학과", 4], ["일자리", 3], ["KTX 노선", 3], ["대학병원 분원", 2],
+  ["광역철도", 2], ["관광벨트", 2],
 ];
-const STANCES = ["기대", "의문", "비판", "모름"];
 const REGIONS = ["광주", "전남", "기타", "무응답"];
 const ANSWERS = [
   "생긴다는 말은 십 년 전에도 들었다. 이번엔 다를까.",
@@ -35,7 +34,6 @@ for (let i = 0; i < N; i++) {
   const id = crypto.randomUUID();
   const entry = {
     id, created_at, thing,
-    stance: STANCES[Math.floor(Math.random() * STANCES.length)],
     answer: ANSWERS[Math.floor(Math.random() * ANSWERS.length)],
     region: REGIONS[Math.floor(Math.random() * REGIONS.length)],
     hidden: false,

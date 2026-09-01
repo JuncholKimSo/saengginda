@@ -31,7 +31,7 @@ for (const file of collectFiles(DATA_DIR)) {
   try {
     const raw = JSON.parse(fs.readFileSync(file, "utf8"));
     if (raw.hidden === true) continue;
-    if (!raw.id || !raw.thing || !raw.stance || !raw.answer) {
+    if (!raw.id || !raw.thing || !raw.answer) {
       console.warn(`skip (필수 필드 누락): ${file}`);
       continue;
     }
@@ -40,7 +40,6 @@ for (const file of collectFiles(DATA_DIR)) {
       created_at: raw.created_at || "",
       thing: String(raw.thing),
       thing_normalized: normalizeThing(raw.thing),
-      stance: String(raw.stance),
       region: String(raw.region || "무응답"),
       answer: String(raw.answer),
     });
@@ -62,7 +61,7 @@ function csvCell(v) {
   const s = String(v ?? "");
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
-const header = ["id", "created_at", "thing", "thing_normalized", "stance", "region", "answer"];
+const header = ["id", "created_at", "thing", "thing_normalized", "region", "answer"];
 const csvLines = [header.join(",")];
 for (const e of entries) csvLines.push(header.map((k) => csvCell(e[k])).join(","));
 // UTF-8 BOM: 엑셀·구글시트에서 한글이 바로 열리도록

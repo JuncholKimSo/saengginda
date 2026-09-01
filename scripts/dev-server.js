@@ -8,7 +8,6 @@ const { execFileSync } = require("child_process");
 
 const ROOT = path.join(__dirname, "..");
 const PORT = Number(process.env.PORT || 8791);
-const STANCES = new Set(["기대", "의문", "비판", "모름"]);
 const REGIONS = new Set(["광주", "전남", "기타", "무응답"]);
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -37,16 +36,14 @@ const server = http.createServer((req, res) => {
       let body;
       try { body = JSON.parse(raw); } catch { return sendJson(res, 400, { error: "잘못된 요청입니다." }); }
       const thing = String(body.thing || "").trim().replace(/\s+/g, " ");
-      const stance = String(body.stance || "");
       const answer = String(body.answer || "").trim();
       const region = REGIONS.has(String(body.region)) ? String(body.region) : "무응답";
       if (!thing || thing.length > 40) return sendJson(res, 400, { error: "빈칸은 1~40자로 채워 주세요." });
-      if (!STANCES.has(stance)) return sendJson(res, 400, { error: "마음을 하나 골라 주세요." });
       if (!answer || answer.length > 2000) return sendJson(res, 400, { error: "답은 1~2000자로 적어 주세요." });
 
       const id = require("crypto").randomUUID();
       const created_at = kstNow();
-      const entry = { id, created_at, thing, stance, answer, region, hidden: false };
+      const entry = { id, created_at, thing, answer, region, hidden: false };
       const dir = path.join(ROOT, "data", created_at.slice(0, 7).replace("-", ""));
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(
@@ -54,7 +51,7 @@ const server = http.createServer((req, res) => {
         JSON.stringify(entry, null, 1), "utf8"
       );
       execFileSync(process.execPath, [path.join(ROOT, "scripts", "aggregate.js")]);
-      console.log(`제출: ${thing} (${stance})`);
+      console.log(`제출: ${thing}`);
       sendJson(res, 200, { ok: true, id });
     });
     return;

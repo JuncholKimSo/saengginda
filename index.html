@@ -17,26 +17,21 @@
 
   <main>
     <form id="form" novalidate>
-      <h1 class="big-sentence">전남·광주가 합쳐지면,<br>
+      <h1 class="big-sentence">전남·광주통합특별시에<br>
         <input class="blank" id="thing" name="thing" type="text" maxlength="40"
-               placeholder="무엇이" autocomplete="off"> 생긴다는데.
+               placeholder="무엇" autocomplete="off">이(가) 생긴다는데.
       </h1>
-      <p class="hint">예: 군공항 이전이, 메가시티가, 일자리가, KTX 노선이 …</p>
+      <p class="hint">예: 자치구의 시 전환, 군공항 이전, 복합쇼핑몰, 반도체 팹, 반도체 계약 학과 …</p>
 
       <fieldset>
-        <legend>이 말을 들으면, 나는</legend>
-        <div class="pills" id="stance-pills">
-          <label><input type="radio" name="stance" value="기대"><span>기대된다</span></label>
-          <label><input type="radio" name="stance" value="의문"><span>글쎄, 의문이다</span></label>
-          <label><input type="radio" name="stance" value="비판"><span>비판하고 싶다</span></label>
-          <label><input type="radio" name="stance" value="모름"><span>잘 모르겠다</span></label>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>나름의 답 <span class="sub">— 그게 정말 생길까요? 생기면 누구에게 좋을까요? 안 생기면요?</span></legend>
+        <legend>나름의 답 <span class="sub">— 그 말에 대한 내 생각을 적어 주세요.</span></legend>
         <textarea id="answer" name="answer" maxlength="2000"
-                  placeholder="짧아도 좋습니다. 들은 이야기, 걱정, 조건, 무엇이든."></textarea>
+                  placeholder="이런 물음에서 시작해도 좋습니다.
+· 그게 정말 생길까? 언제, 어디에?
+· 그 말은 어디서 들었나? 누가 하던 말인가?
+· 생기면 누구에게 좋은가? 우리 동네까지 오는가?
+· 안 생기면 어떻게 되나? 대신 없어지는 것은 없나?
+짧아도 좋습니다. 들은 이야기, 기대, 걱정, 조건, 무엇이든."></textarea>
         <div class="count"><span id="answer-count">0</span> / 2000</div>
       </fieldset>
 
