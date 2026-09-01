@@ -3,7 +3,7 @@ main = "worker.js"
 compatibility_date = "2026-08-01"
 
 [vars]
-GITHUB_REPO = "OWNER/saengginda"      # 배포 전 GitHub 아이디로 바꿀 것
+GITHUB_REPO = "JuncholKimSo/saengginda"
 GITHUB_BRANCH = "main"
 ALLOWED_ORIGIN = "*"                  # Pages 주소 확정 후 "https://OWNER.github.io" 로 좁힐 것
 
