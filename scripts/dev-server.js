@@ -9,6 +9,7 @@ const { execFileSync } = require("child_process");
 const ROOT = path.join(__dirname, "..");
 const PORT = Number(process.env.PORT || 8791);
 const REGIONS = new Set(["광주", "전남", "기타", "무응답"]);
+const VERBS = new Set(["생긴다", "바뀐다"]);
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -38,12 +39,13 @@ const server = http.createServer((req, res) => {
       const thing = String(body.thing || "").trim().replace(/\s+/g, " ");
       const answer = String(body.answer || "").trim();
       const region = REGIONS.has(String(body.region)) ? String(body.region) : "무응답";
+      const verb = VERBS.has(String(body.verb)) ? String(body.verb) : "생긴다";
       if (!thing || thing.length > 40) return sendJson(res, 400, { error: "빈칸은 1~40자로 채워 주세요." });
       if (!answer || answer.length > 2000) return sendJson(res, 400, { error: "답은 1~2000자로 적어 주세요." });
 
       const id = require("crypto").randomUUID();
       const created_at = kstNow();
-      const entry = { id, created_at, thing, answer, region, hidden: false };
+      const entry = { id, created_at, thing, verb, answer, region, hidden: false };
       const dir = path.join(ROOT, "data", created_at.slice(0, 7).replace("-", ""));
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(

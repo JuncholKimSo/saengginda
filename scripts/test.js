@@ -16,7 +16,7 @@ function write(name, obj) {
 fs.mkdirSync(TMP_DIR, { recursive: true });
 try {
   write("t1.json", { id: "t1", created_at: "2099-01-01T10:00:00+09:00", thing: "일자리가", region: "광주", answer: '쉼표, "따옴표"와\n줄바꿈 포함' });
-  write("t2.json", { id: "t2", created_at: "2099-01-01T11:00:00+09:00", thing: "  군공항   이전이 ", region: "무응답", answer: "답2" });
+  write("t2.json", { id: "t2", created_at: "2099-01-01T11:00:00+09:00", thing: "  군공항   이전이 ", verb: "바뀐다", region: "무응답", answer: "답2" });
   write("t3.json", { id: "t3", created_at: "2099-01-01T12:00:00+09:00", thing: "숨김건", region: "전남", answer: "보이면 안 됨", hidden: true });
   write("t4.json", { id: "t4", created_at: "2099-01-01T13:00:00+09:00", thing: "종이", region: "기타", answer: "조사 아님" });
 
@@ -30,6 +30,8 @@ try {
   assert.strictEqual(byId.t1.thing_normalized, "일자리", "조사 '가' 제거");
   assert.strictEqual(byId.t2.thing_normalized, "군공항 이전", "공백 정리 + 조사 제거");
   assert.strictEqual(byId.t4.thing_normalized, "종이", "짧은 단어의 끝글자는 보존");
+  assert.strictEqual(byId.t2.verb, "바뀐다", "verb 보존");
+  assert.strictEqual(byId.t1.verb, "생긴다", "verb 기본값");
 
   const csv = fs.readFileSync(path.join(ROOT, "public", "responses.csv"), "utf8");
   assert.ok(csv.charCodeAt(0) === 0xfeff, "CSV에 UTF-8 BOM 포함");

@@ -10,6 +10,7 @@
 // 익명성: IP·UA 등 요청 메타데이터는 저장하지 않는다. 속도 제한은 메모리에서만 처리.
 
 const REGIONS = new Set(["광주", "전남", "기타", "무응답"]);
+const VERBS = new Set(["생긴다", "바뀐다"]);
 
 // isolate 메모리 안에서만 사는 속도 제한 (분당 5건/IP). 어디에도 기록되지 않는다.
 const rateBuckets = new Map();
@@ -67,13 +68,14 @@ export default {
     const thing = String(body.thing || "").trim().replace(/\s+/g, " ");
     const answer = String(body.answer || "").trim();
     const region = REGIONS.has(String(body.region)) ? String(body.region) : "무응답";
+    const verb = VERBS.has(String(body.verb)) ? String(body.verb) : "생긴다";
 
     if (!thing || thing.length > 40) return json(env, 400, { error: "빈칸은 1~40자로 채워 주세요." });
     if (!answer || answer.length > 2000) return json(env, 400, { error: "답은 1~2000자로 적어 주세요." });
 
     const id = crypto.randomUUID();
     const created_at = kstNow();
-    const entry = { id, created_at, thing, answer, region, hidden: false };
+    const entry = { id, created_at, thing, verb, answer, region, hidden: false };
 
     const yyyymm = created_at.slice(0, 7).replace("-", "");
     const path = `data/${yyyymm}/${created_at.slice(0, 10)}_${id}.json`;

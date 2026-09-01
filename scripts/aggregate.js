@@ -40,6 +40,7 @@ for (const file of collectFiles(DATA_DIR)) {
       created_at: raw.created_at || "",
       thing: String(raw.thing),
       thing_normalized: normalizeThing(raw.thing),
+      verb: String(raw.verb || "생긴다"),
       region: String(raw.region || "무응답"),
       answer: String(raw.answer),
     });
@@ -61,7 +62,7 @@ function csvCell(v) {
   const s = String(v ?? "");
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
-const header = ["id", "created_at", "thing", "thing_normalized", "region", "answer"];
+const header = ["id", "created_at", "thing", "thing_normalized", "verb", "region", "answer"];
 const csvLines = [header.join(",")];
 for (const e of entries) csvLines.push(header.map((k) => csvCell(e[k])).join(","));
 // UTF-8 BOM: 엑셀·구글시트에서 한글이 바로 열리도록

@@ -83,10 +83,13 @@
     list.innerHTML = "";
     group.entries.slice().reverse().forEach(function (e) {
       var li = document.createElement("li");
-      if (e.region && e.region !== "무응답") {
+      var metaParts = [];
+      if (e.verb === "바뀐다") metaParts.push("바뀐다는데");
+      if (e.region && e.region !== "무응답") metaParts.push(e.region);
+      if (metaParts.length) {
         var meta = document.createElement("div");
         meta.className = "meta";
-        meta.textContent = e.region;
+        meta.textContent = metaParts.join(" · ");
         li.appendChild(meta);
       }
       var p = document.createElement("p");

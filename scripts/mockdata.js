@@ -34,6 +34,7 @@ for (let i = 0; i < N; i++) {
   const id = crypto.randomUUID();
   const entry = {
     id, created_at, thing,
+    verb: thing === "자치구의 시 전환" ? "바뀐다" : "생긴다",
     answer: ANSWERS[Math.floor(Math.random() * ANSWERS.length)],
     region: REGIONS[Math.floor(Math.random() * REGIONS.length)],
     hidden: false,
