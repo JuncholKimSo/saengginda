@@ -1,0 +1,188 @@
+:root {
+  --paper: #faf7f1;
+  --ink: #211f1b;
+  --ink-soft: #6b665d;
+  --line: #d9d3c7;
+  --accent: #2f6b5f;
+  --accent-soft: #e4ede9;
+  --expect: #2f8f6b;
+  --doubt: #c9891f;
+  --critic: #c25b4e;
+  --unsure: #8a857d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+.site-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 56px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.site-head a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+.site-head a:hover { color: var(--accent); border-color: var(--accent); }
+
+.big-sentence {
+  font-size: clamp(26px, 6vw, 38px);
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  word-break: keep-all;
+}
+
+.blank {
+  display: inline-block;
+  min-width: 7em;
+  max-width: 100%;
+  border: none;
+  border-bottom: 3px solid var(--accent);
+  background: transparent;
+  font: inherit;
+  color: var(--accent);
+  padding: 0 4px 2px;
+  outline: none;
+  vertical-align: baseline;
+}
+.blank::placeholder { color: #b9c9c4; font-weight: 500; }
+
+.hint {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 48px;
+}
+
+fieldset {
+  border: none;
+  margin: 0 0 40px;
+  padding: 0;
+}
+legend {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 0;
+  margin-bottom: 14px;
+}
+legend .sub { font-weight: 400; color: var(--ink-soft); font-size: 14px; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pills label {
+  cursor: pointer;
+}
+.pills input { position: absolute; opacity: 0; pointer-events: none; }
+.pills span {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font-size: 15px;
+  color: var(--ink);
+  background: #fff;
+  transition: border-color .15s, background .15s;
+}
+.pills input:checked + span {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.pills input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+textarea {
+  width: 100%;
+  min-height: 160px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  resize: vertical;
+  outline: none;
+}
+textarea:focus { border-color: var(--accent); }
+textarea::placeholder { color: #b5afa4; }
+
+.count { font-size: 13px; color: var(--ink-soft); text-align: right; margin-top: 6px; }
+
+.submit-row { margin-top: 8px; }
+button.primary {
+  appearance: none;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 14px 36px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+button.primary:hover { background: #275a50; }
+button.primary:disabled { background: #a8b5b1; cursor: default; }
+
+.form-error {
+  color: var(--critic);
+  font-size: 14px;
+  margin-top: 12px;
+  min-height: 1.5em;
+}
+
+.privacy {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* 제출 완료 화면 */
+.done { display: none; }
+.done h2 {
+  font-size: clamp(24px, 5vw, 32px);
+  line-height: 1.5;
+  word-break: keep-all;
+  margin: 0 0 16px;
+}
+.done p { color: var(--ink-soft); margin: 0 0 32px; }
+.done .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.done a.primary {
+  display: inline-block;
+  text-decoration: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 999px;
+}
+.done button.ghost {
+  appearance: none;
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font: inherit;
+  padding: 12px 28px;
+  cursor: pointer;
+  color: var(--ink);
+}
+.done button.ghost:hover { border-color: var(--accent); color: var(--accent); }

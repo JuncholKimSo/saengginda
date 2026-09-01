@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모인 말들 — 생긴다는데</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root {
+  --bg: #16150f;
+  --fg: #f2eee4;
+  --fg-soft: #97917f;
+  --line: #35332a;
+  --expect: #5fc596;
+  --doubt: #e0a83d;
+  --critic: #e07a6b;
+  --unsure: #8f8a7c;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  overflow: hidden;
+}
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 18px 28px;
+  font-size: 15px;
+  color: var(--fg-soft);
+  z-index: 2;
+}
+header h1 { font-size: 18px; font-weight: 700; color: var(--fg); margin: 0; }
+header .count b { color: var(--fg); font-weight: 700; }
+header a { color: var(--fg-soft); text-decoration: none; border-bottom: 1px solid var(--line); margin-left: auto; }
+header a:hover { color: var(--fg); }
+.legend { display: flex; gap: 14px; font-size: 13px; }
+.legend span::before {
+  content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  margin-right: 5px; vertical-align: 1px; background: currentColor;
+}
+.legend .l-expect { color: var(--expect); }
+.legend .l-doubt { color: var(--doubt); }
+.legend .l-critic { color: var(--critic); }
+.legend .l-unsure { color: var(--unsure); }
+
+#cloud { position: fixed; inset: 0; }
+#cloud text { cursor: pointer; transition: opacity .2s; }
+#cloud text:hover { opacity: .75; }
+
+#empty {
+  position: fixed; inset: 0; display: none;
+  align-items: center; justify-content: center;
+  color: var(--fg-soft); font-size: 20px; text-align: center; line-height: 1.8;
+}
+
+/* 답변 패널 */
+#panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(440px, 100vw);
+  background: #1e1c15;
+  border-left: 1px solid var(--line);
+  transform: translateX(100%);
+  transition: transform .25s ease;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+#panel.open { transform: translateX(0); }
+#panel .panel-head {
+  padding: 22px 24px 14px;
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: baseline; gap: 12px;
+}
+#panel h2 { margin: 0; font-size: 24px; word-break: keep-all; }
+#panel .panel-head .n { color: var(--fg-soft); font-size: 14px; }
+#panel .close {
+  margin-left: auto; appearance: none; background: none; border: none;
+  color: var(--fg-soft); font-size: 22px; cursor: pointer; padding: 4px;
+}
+#panel .close:hover { color: var(--fg); }
+#panel ul { list-style: none; margin: 0; padding: 8px 24px 40px; overflow-y: auto; flex: 1; }
+#panel li { padding: 16px 0; border-bottom: 1px solid var(--line); }
+#panel li .meta { font-size: 13px; margin-bottom: 6px; }
+#panel li .meta .region { color: var(--fg-soft); margin-left: 8px; }
+#panel li p { margin: 0; font-size: 15px; line-height: 1.7; color: var(--fg); white-space: pre-wrap; word-break: keep-all; }
+.s-기대 { color: var(--expect); }
+.s-의문 { color: var(--doubt); }
+.s-비판 { color: var(--critic); }
+.s-모름 { color: var(--unsure); }
+</style>
+</head>
+<body>
+<header>
+  <h1>___가 생긴다는데.</h1>
+  <span class="count">지금까지 <b id="total">0</b>개의 말</span>
+  <div class="legend">
+    <span class="l-expect">기대</span><span class="l-doubt">의문</span>
+    <span class="l-critic">비판</span><span class="l-unsure">모름</span>
+  </div>
+  <a href="index.html">나도 말 보태기 →</a>
+</header>
+
+<svg id="cloud"></svg>
+<div id="empty">아직 모인 말이 없습니다.<br>첫 번째 말을 보태 주세요.</div>
+
+<aside id="panel" aria-hidden="true">
+  <div class="panel-head">
+    <h2 id="panel-word"></h2>
+    <span class="n" id="panel-n"></span>
+    <button class="close" id="panel-close" aria-label="닫기">×</button>
+  </div>
+  <ul id="panel-list"></ul>
+</aside>
+
+<script src="assets/vendor/d3.layout.cloud.js"></script>
+<script src="assets/config.js"></script>
+<script src="assets/cloud.js"></script>
+</body>
+</html>
