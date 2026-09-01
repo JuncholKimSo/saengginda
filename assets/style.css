@@ -207,3 +207,15 @@ button.primary:disabled { background: #a8b5b1; cursor: default; }
   color: var(--ink);
 }
 .done button.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* 관리 페이지로 가는 비밀 표시 */
+a.secret-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+a.secret-dot:hover { background: var(--accent); }

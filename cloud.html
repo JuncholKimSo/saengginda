@@ -36,6 +36,12 @@ header h1 { font-size: 18px; font-weight: 700; color: var(--fg); margin: 0; }
 header .count b { color: var(--fg); font-weight: 700; }
 header a { color: var(--fg-soft); text-decoration: none; border-bottom: 1px solid var(--line); margin-left: auto; }
 header a:hover { color: var(--fg); }
+a.secret-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--line); border: none; margin-left: 0; flex: none;
+  align-self: center;
+}
+a.secret-dot:hover { background: var(--fg-soft); }
 #cloud { position: fixed; inset: 0; }
 #cloud text { cursor: pointer; transition: opacity .2s; }
 #cloud text:hover { opacity: .75; }
@@ -83,6 +89,7 @@ header a:hover { color: var(--fg); }
   <h1>___이(가) 생긴다는데, 바뀐다는데.</h1>
   <span class="count">지금까지 <b id="total">0</b>개의 말</span>
   <a href="index.html">나도 말 보태기 →</a>
+  <a class="secret-dot" href="admin.html" aria-hidden="true" tabindex="-1"></a>
 </header>
 
 <svg id="cloud"></svg>
@@ -98,7 +105,7 @@ header a:hover { color: var(--fg); }
 </aside>
 
 <script src="assets/vendor/d3.layout.cloud.js"></script>
-<script src="assets/config.js?v=2"></script>
-<script src="assets/cloud.js?v=2"></script>
+<script src="assets/config.js?v=3"></script>
+<script src="assets/cloud.js?v=3"></script>
 </body>
 </html>
