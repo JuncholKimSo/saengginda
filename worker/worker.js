@@ -24,18 +24,26 @@ function rateLimited(ip) {
   return false;
 }
 
-function corsHeaders(env) {
+// ALLOWED_ORIGIN: 쉼표로 여러 개 지정 가능. 요청 Origin이 목록에 있으면 그 값을 돌려준다.
+function corsHeaders(env, request) {
+  const allowed = (env.ALLOWED_ORIGIN || "*").split(",").map((s) => s.trim());
+  const origin = request.headers.get("Origin") || "";
+  let allow;
+  if (allowed.includes("*")) allow = "*";
+  else if (allowed.includes(origin)) allow = origin;
+  else allow = allowed[0];
   return {
-    "Access-Control-Allow-Origin": env.ALLOWED_ORIGIN || "*",
+    "Access-Control-Allow-Origin": allow,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin",
   };
 }
 
-function json(env, status, body) {
+function json(env, request, status, body) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(env) },
+    headers: { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(env, request) },
   });
 }
 
@@ -54,24 +62,24 @@ function toBase64Utf8(str) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(env) });
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(env, request) });
     if (request.method !== "POST" || url.pathname !== "/submit") {
-      return json(env, 404, { error: "not found" });
+      return json(env, request, 404, { error: "not found" });
     }
 
     const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-    if (rateLimited(ip)) return json(env, 429, { error: "잠시 후 다시 시도해 주세요." });
+    if (rateLimited(ip)) return json(env, request, 429, { error: "잠시 후 다시 시도해 주세요." });
 
     let body;
-    try { body = await request.json(); } catch { return json(env, 400, { error: "잘못된 요청입니다." }); }
+    try { body = await request.json(); } catch { return json(env, request, 400, { error: "잘못된 요청입니다." }); }
 
     const thing = String(body.thing || "").trim().replace(/\s+/g, " ");
     const answer = String(body.answer || "").trim();
     const region = REGIONS.has(String(body.region)) ? String(body.region) : "무응답";
     const verb = VERBS.has(String(body.verb)) ? String(body.verb) : "생긴다";
 
-    if (!thing || thing.length > 40) return json(env, 400, { error: "빈칸은 1~40자로 채워 주세요." });
-    if (!answer || answer.length > 2000) return json(env, 400, { error: "답은 1~2000자로 적어 주세요." });
+    if (!thing || thing.length > 40) return json(env, request, 400, { error: "빈칸은 1~40자로 채워 주세요." });
+    if (!answer || answer.length > 2000) return json(env, request, 400, { error: "답은 1~2000자로 적어 주세요." });
 
     const id = crypto.randomUUID();
     const created_at = kstNow();
@@ -99,8 +107,8 @@ export default {
 
     if (!res.ok) {
       console.error("GitHub API error", res.status, await res.text());
-      return json(env, 502, { error: "저장에 실패했습니다. 잠시 후 다시 시도해 주세요." });
+      return json(env, request, 502, { error: "저장에 실패했습니다. 잠시 후 다시 시도해 주세요." });
     }
-    return json(env, 200, { ok: true, id });
+    return json(env, request, 200, { ok: true, id });
   },
 };

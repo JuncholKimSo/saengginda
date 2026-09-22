@@ -65,14 +65,25 @@
     if (!answerText) { errorEl.textContent = "나름의 답을 한 줄이라도 적어 주세요."; return; }
 
     var url = window.SAENGGINDA_CONFIG.submitUrl || "/submit";
+    var fallbackUrl = window.SAENGGINDA_CONFIG.fallbackSubmitUrl;
     submitBtn.disabled = true;
     submitBtn.textContent = "보태는 중…";
 
-    fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ thing: thing, verb: verb, answer: answerText, region: getRegion() }),
-    })
+    var payload = JSON.stringify({ thing: thing, verb: verb, answer: answerText, region: getRegion() });
+    var post = function (u) {
+      return fetch(u, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      });
+    };
+
+    post(url)
+      .catch(function (networkErr) {
+        // 네트워크 오류(DNS 미전파 등)일 때만 예비 주소로 한 번 더
+        if (fallbackUrl && fallbackUrl !== url) return post(fallbackUrl);
+        throw networkErr;
+      })
       .then(function (res) {
         if (!res.ok) return res.json().catch(function () { return {}; }).then(function (body) {
           throw new Error(body.error || "제출에 실패했습니다 (" + res.status + ")");
