@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-01T09:59:30.855Z",
- "count": 35,
+ "generated_at": "2026-10-01T09:59:58.832Z",
+ "count": 36,
  "aliases": {
   "반도체 팹": "반도체팹",
   "반도체 펩": "반도체팹",
@@ -403,6 +403,17 @@
    "answer": "그게 광주 빈부격차 해소에 도움이 될까?",
    "hidden": false,
    "path": "data/202610/2026-10-01_e56dc665-3206-4dcd-8f94-d6705b152d61.json"
+  },
+  {
+   "id": "604d9a2a-2eec-48b7-b3e2-bb8690bd3b2f",
+   "created_at": "2026-10-01T18:59:46+09:00",
+   "thing": "복합쇼핑몰",
+   "thing_normalized": "복합쇼핑몰",
+   "verb": "생긴다",
+   "region": "무응답",
+   "answer": "무슨 쇼핑몰인가?\n\n솔직히 좀 설레는 것 같다\n\n동시에 소상공인들이 걱정된다.",
+   "hidden": false,
+   "path": "data/202610/2026-10-01_604d9a2a-2eec-48b7-b3e2-bb8690bd3b2f.json"
   }
  ]
 }
