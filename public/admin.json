@@ -1,6 +1,7 @@
 {
- "generated_at": "2026-10-01T09:11:53.538Z",
- "count": 30,
+ "generated_at": "2026-10-01T09:23:48.279Z",
+ "count": 31,
+ "aliases": {},
  "entries": [
   {
    "id": "ad4986ba-96b3-4747-98cd-ca7c340d4141",
@@ -331,6 +332,17 @@
    "answer": "새로운 기업들이 생기면 내 삶은 어떻게 달라지는 걸까요?\n기대보다 우려가 큰 시민1",
    "hidden": false,
    "path": "data/202610/2026-10-01_4079eabf-bb58-4ec3-9a7e-1a7ee556a0c6.json"
+  },
+  {
+   "id": "09adc580-a4d7-43e3-a9d2-dbd1a90de178",
+   "created_at": "2026-10-01T18:23:35+09:00",
+   "thing": "람사르습지",
+   "thing_normalized": "람사르습지",
+   "verb": "생긴다",
+   "region": "광주",
+   "answer": "온수 방출, 생태계 교란 문제…",
+   "hidden": false,
+   "path": "data/202610/2026-10-01_09adc580-a4d7-43e3-a9d2-dbd1a90de178.json"
   }
  ]
 }
