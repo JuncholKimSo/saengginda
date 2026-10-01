@@ -93,6 +93,16 @@
   var searchEl = document.getElementById("search");
   var filterEl = document.getElementById("filter");
 
+  // 빈칸 열 정렬: 클릭할 때마다 가나다순 → 역순 → 최신순(기본) 순환
+  var thingSort = null; // null | "asc" | "desc"
+  var thingTh = document.getElementById("th-thing");
+  var thingDir = document.getElementById("th-thing-dir");
+  thingTh.addEventListener("click", function () {
+    thingSort = thingSort === null ? "asc" : thingSort === "asc" ? "desc" : null;
+    thingDir.textContent = thingSort === "asc" ? "▲" : thingSort === "desc" ? "▼" : "";
+    renderRows();
+  });
+
   function renderStats() {
     var visible = entries.filter(function (e) { return !e.hidden; }).length;
     var byRegion = {};
@@ -124,6 +134,12 @@
       if (q && (e.thing + " " + e.answer).toLowerCase().indexOf(q) === -1) return false;
       return true;
     });
+    if (thingSort) {
+      shown.sort(function (a, b) {
+        var cmp = a.thing_normalized.localeCompare(b.thing_normalized, "ko");
+        return thingSort === "asc" ? cmp : -cmp;
+      });
+    }
     shown.forEach(function (e) {
       var tr = document.createElement("tr");
       if (e.hidden) tr.className = "hidden-row";

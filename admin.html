@@ -6,7 +6,7 @@
 <title>수집 관리 · 생긴다는데</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/style.css?v=6">
+<link rel="stylesheet" href="assets/style.css?v=7">
 <style>
 .wrap { max-width: 1080px; }
 .admin-head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
@@ -75,6 +75,9 @@ td.actions button:hover:not(:disabled) { border-color: var(--critic); color: var
 tr.hidden-row td.actions button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 td.actions button:disabled { cursor: default; color: #b5afa4; }
 td.actions .ghlink { font-size: 12px; margin-left: 8px; color: var(--ink-soft); }
+th.sortable { cursor: pointer; user-select: none; }
+th.sortable:hover { color: var(--accent); }
+th.sortable #th-thing-dir { color: var(--accent); font-weight: 700; }
 .msg { min-height: 1.5em; font-size: 14px; margin: 12px 2px; }
 .msg.err { color: var(--critic); }
 .msg.ok { color: var(--accent); }
@@ -119,14 +122,14 @@ td.actions .ghlink { font-size: 12px; margin-left: 8px; color: var(--ink-soft); 
   <div class="table-scroll">
     <table>
       <thead>
-        <tr><th>시간</th><th>빈칸</th><th></th><th>지역</th><th>나름의 답</th><th>관리</th></tr>
+        <tr><th>시간</th><th class="sortable" id="th-thing" title="눌러서 가나다순 정렬">빈칸 <span id="th-thing-dir"></span></th><th></th><th>지역</th><th>나름의 답</th><th>관리</th></tr>
       </thead>
       <tbody id="rows"></tbody>
     </table>
   </div>
 </div>
 
-<script src="assets/config.js?v=6"></script>
-<script src="assets/admin.js?v=6"></script>
+<script src="assets/config.js?v=7"></script>
+<script src="assets/admin.js?v=7"></script>
 </body>
 </html>
