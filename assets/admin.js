@@ -18,7 +18,7 @@
     tokenNote.textContent = has
       ? "토큰 저장됨. 숨김/해제 버튼이 활성화되었습니다."
       : "토큰 없음. 표 열람과 CSV 다운로드는 토큰 없이도 됩니다.";
-    document.querySelectorAll("td.actions button").forEach(function (b) { b.disabled = !has; });
+    document.querySelectorAll("td.actions button, #merge-save, #alias-list button").forEach(function (b) { b.disabled = !has; });
   }
   document.getElementById("token-save").addEventListener("click", function () {
     var v = tokenInput.value.trim();
@@ -86,6 +86,123 @@
       })
       .catch(function (err) { say(err.message, "err"); })
       .finally(function () { btn.disabled = !getToken(); });
+  }
+
+  // ---- 빈칸 병합 (aliases.json 커밋) ----
+  var aliases = {};
+  var mergeNote = document.getElementById("merge-note");
+
+  function ghHeaders() {
+    return { "Authorization": "Bearer " + getToken(), "Accept": "application/vnd.github+json" };
+  }
+  function fetchAliasFile() {
+    var api = "https://api.github.com/repos/" + CFG.repo + "/contents/aliases.json?ref=" + CFG.branch;
+    return fetch(api, { headers: ghHeaders() }).then(function (res) {
+      if (res.status === 404) return { map: {}, sha: null };
+      if (!res.ok) throw new Error("병합 목록을 읽지 못했습니다 (" + res.status + ")");
+      return res.json().then(function (file) {
+        return { map: JSON.parse(b64DecodeUtf8(file.content)), sha: file.sha };
+      });
+    });
+  }
+  function putAliasFile(map, sha, message) {
+    var body = { message: message, branch: CFG.branch, content: b64EncodeUtf8(JSON.stringify(map, null, 1)) };
+    if (sha) body.sha = sha;
+    return fetch("https://api.github.com/repos/" + CFG.repo + "/contents/aliases.json", {
+      method: "PUT", headers: ghHeaders(), body: JSON.stringify(body),
+    }).then(function (res) {
+      if (!res.ok) throw new Error("병합 저장에 실패했습니다 (" + res.status + ")");
+    });
+  }
+
+  function renderMergeBox() {
+    var counts = {};
+    entries.forEach(function (e) { counts[e.thing_normalized] = (counts[e.thing_normalized] || 0) + 1; });
+    var words = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+
+    var box = document.getElementById("merge-words");
+    box.innerHTML = "";
+    words.forEach(function (w) {
+      var label = document.createElement("label");
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.value = w;
+      cb.addEventListener("change", function () { label.classList.toggle("on", cb.checked); });
+      var span = document.createElement("span");
+      span.textContent = w;
+      var n = document.createElement("span");
+      n.className = "n";
+      n.textContent = counts[w];
+      label.appendChild(cb);
+      label.appendChild(span);
+      label.appendChild(n);
+      box.appendChild(label);
+    });
+
+    var list = document.getElementById("alias-list");
+    list.innerHTML = "";
+    var keys = Object.keys(aliases);
+    if (keys.length) {
+      var head = document.createElement("b");
+      head.textContent = "적용 중인 병합: ";
+      list.appendChild(head);
+      keys.forEach(function (k) {
+        var item = document.createElement("span");
+        item.className = "alias-item";
+        item.appendChild(document.createTextNode(k + " → " + aliases[k] + " "));
+        var del = document.createElement("button");
+        del.textContent = "해제";
+        del.disabled = !getToken();
+        del.addEventListener("click", function () { removeAlias(k, del); });
+        item.appendChild(del);
+        list.appendChild(item);
+      });
+    }
+  }
+
+  function saveMerge() {
+    var token = getToken();
+    if (!token) return;
+    var selected = Array.prototype.map.call(
+      document.querySelectorAll("#merge-words input:checked"),
+      function (cb) { return cb.value; }
+    );
+    var canonical = document.getElementById("merge-canonical").value.trim().replace(/\s+/g, " ");
+    if (!selected.length) { mergeNote.textContent = "합칠 말을 하나 이상 체크해 주세요."; return; }
+    if (!canonical) { mergeNote.textContent = "대표 표기를 적어 주세요."; return; }
+
+    mergeNote.textContent = "저장소에 반영하는 중…";
+    fetchAliasFile()
+      .then(function (file) {
+        var map = file.map;
+        selected.forEach(function (w) { if (w !== canonical) map[w] = canonical; });
+        // 선택된 말을 가리키던 기존 병합도 새 대표 표기로 따라가게 한다
+        Object.keys(map).forEach(function (k) {
+          if (selected.indexOf(map[k]) !== -1) map[k] = canonical;
+        });
+        delete map[canonical];
+        return putAliasFile(map, file.sha, "chore: 빈칸 병합 " + canonical);
+      })
+      .then(function () {
+        mergeNote.textContent = "병합 저장됨. 1~2분 뒤 집계에 반영됩니다 (새로고침하면 보입니다).";
+        document.getElementById("merge-canonical").value = "";
+      })
+      .catch(function (err) { mergeNote.textContent = err.message; });
+  }
+  document.getElementById("merge-save").addEventListener("click", saveMerge);
+
+  function removeAlias(variant, btn) {
+    btn.disabled = true;
+    mergeNote.textContent = "해제하는 중…";
+    fetchAliasFile()
+      .then(function (file) {
+        delete file.map[variant];
+        return putAliasFile(file.map, file.sha, "chore: 빈칸 병합 해제 " + variant);
+      })
+      .then(function () {
+        mergeNote.textContent = "해제됨. 1~2분 뒤 집계에 반영됩니다.";
+      })
+      .catch(function (err) { mergeNote.textContent = err.message; btn.disabled = !getToken(); });
   }
 
   // ---- 표 ----
@@ -215,8 +332,10 @@
     .then(function (res) { return res.ok ? res.json() : { entries: [] }; })
     .then(function (data) {
       entries = data.entries || [];
+      aliases = data.aliases || {};
       renderStats();
       renderRows();
+      renderMergeBox();
       refreshTokenUi();
     })
     .catch(function () { say("admin.json 을 불러오지 못했습니다.", "err"); });

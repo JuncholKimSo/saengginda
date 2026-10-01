@@ -29,6 +29,17 @@ function normalizeThing(thing) {
   return t;
 }
 
+// aliases.json: 관리 페이지의 "빈칸 병합"이 저장하는 { "변형 표기": "대표 표기" } 맵
+const ALIAS_FILE = path.join(ROOT, "aliases.json");
+let aliases = {};
+if (fs.existsSync(ALIAS_FILE)) {
+  try { aliases = JSON.parse(fs.readFileSync(ALIAS_FILE, "utf8")); }
+  catch (e) { console.warn(`aliases.json 파싱 실패, 무시: ${e.message}`); }
+}
+function applyAlias(norm) {
+  return Object.prototype.hasOwnProperty.call(aliases, norm) ? String(aliases[norm]) : norm;
+}
+
 const all = [];
 for (const file of collectFiles(DATA_DIR)) {
   try {
@@ -41,7 +52,7 @@ for (const file of collectFiles(DATA_DIR)) {
       id: raw.id,
       created_at: raw.created_at || "",
       thing: String(raw.thing),
-      thing_normalized: normalizeThing(raw.thing),
+      thing_normalized: applyAlias(normalizeThing(raw.thing)),
       verb: String(raw.verb || "생긴다"),
       region: String(raw.region || "무응답"),
       answer: String(raw.answer),
@@ -66,7 +77,7 @@ fs.writeFileSync(
 
 fs.writeFileSync(
   path.join(PUBLIC_DIR, "admin.json"),
-  JSON.stringify({ generated_at: new Date().toISOString(), count: all.length, entries: all }, null, 1),
+  JSON.stringify({ generated_at: new Date().toISOString(), count: all.length, aliases, entries: all }, null, 1),
   "utf8"
 );
 

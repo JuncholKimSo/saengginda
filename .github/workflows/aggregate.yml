@@ -3,7 +3,7 @@ name: aggregate
 on:
   push:
     branches: [main]
-    paths: ["data/**"]
+    paths: ["data/**", "aliases.json"]
   workflow_dispatch:
 
 permissions:

@@ -13,8 +13,12 @@ function write(name, obj) {
   fs.writeFileSync(path.join(TMP_DIR, name), JSON.stringify(obj), "utf8");
 }
 
+const ALIAS_FILE = path.join(ROOT, "aliases.json");
+const aliasBackup = fs.existsSync(ALIAS_FILE) ? fs.readFileSync(ALIAS_FILE, "utf8") : null;
+
 fs.mkdirSync(TMP_DIR, { recursive: true });
 try {
+  fs.writeFileSync(ALIAS_FILE, JSON.stringify({ "군공항 이전": "군공항" }), "utf8");
   write("t1.json", { id: "t1", created_at: "2099-01-01T10:00:00+09:00", thing: "일자리가", region: "광주", answer: '쉼표, "따옴표"와\n줄바꿈 포함' });
   write("t2.json", { id: "t2", created_at: "2099-01-01T11:00:00+09:00", thing: "  군공항   이전이 ", verb: "바뀐다", region: "무응답", answer: "답2" });
   write("t3.json", { id: "t3", created_at: "2099-01-01T12:00:00+09:00", thing: "숨김건", region: "전남", answer: "보이면 안 됨", hidden: true });
@@ -28,7 +32,7 @@ try {
   assert.ok(byId.t1 && byId.t2 && byId.t4, "정상 건 3건 포함");
   assert.ok(!byId.t3, "hidden 건 제외");
   assert.strictEqual(byId.t1.thing_normalized, "일자리", "조사 '가' 제거");
-  assert.strictEqual(byId.t2.thing_normalized, "군공항 이전", "공백 정리 + 조사 제거");
+  assert.strictEqual(byId.t2.thing_normalized, "군공항", "공백 정리 + 조사 제거 + 병합(alias) 적용");
   assert.strictEqual(byId.t4.thing_normalized, "종이", "짧은 단어의 끝글자는 보존");
   assert.strictEqual(byId.t2.verb, "바뀐다", "verb 보존");
   assert.strictEqual(byId.t1.verb, "생긴다", "verb 기본값");
@@ -48,5 +52,7 @@ try {
   console.log("테스트 통과 ✓");
 } finally {
   fs.rmSync(TMP_DIR, { recursive: true, force: true });
+  if (aliasBackup === null) fs.rmSync(ALIAS_FILE, { force: true });
+  else fs.writeFileSync(ALIAS_FILE, aliasBackup, "utf8");
   execFileSync(process.execPath, [path.join(ROOT, "scripts", "aggregate.js")]);
 }

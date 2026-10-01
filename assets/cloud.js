@@ -21,7 +21,8 @@
   function buildGroups(entries) {
     var map = {};
     entries.forEach(function (e) {
-      var w = normalize(e.thing);
+      // 집계가 병합(aliases)까지 적용한 표기를 우선 사용
+      var w = e.thing_normalized || normalize(e.thing);
       if (!w) return;
       if (!map[w]) map[w] = { word: w, count: 0, entries: [] };
       map[w].count += 1;
